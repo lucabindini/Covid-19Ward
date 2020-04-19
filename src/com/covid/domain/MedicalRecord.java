@@ -7,11 +7,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MedicalRecord implements Observer {
     private final CovidPatient patient;
     private final String medicalRecordID;
+    private RecoveryRateStrategy strategy;
 
     public MedicalRecord(CovidPatient patient) {
         this.patient = patient;
         medicalRecordID = generateCode(patient);
         patient.addObserver(this);
+        strategy = new RecoveryRateNoPathologies();
     }
 
     private String generateCode(CovidPatient patient) {
@@ -29,7 +31,18 @@ public class MedicalRecord implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-    //TODO do something
+        if (patient.getNumPathologies() > 0)
+            setStrategy(new RecoveryRatePreviousPathologies());
+        else
+            setStrategy(new RecoveryRateNoPathologies());
+    }
+
+    private void setStrategy(RecoveryRateStrategy strategy){
+        this.strategy = strategy;
+    }
+
+    public double getRecoveryRate(){
+        return strategy.recoveryRate(patient);
     }
 
     public String getMedicalRecordID() {
