@@ -2,8 +2,9 @@ package com.covid.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
-public class CovidPatient {
+public class CovidPatient extends Observable {
     private final String name;
     private final String surname;
     private final String registeredResidence;
@@ -83,6 +84,8 @@ public class CovidPatient {
 
     public void addPreviousPathology(Pathology p) {
         previousPathologies.add(p);
+        setChanged();
+        notifyObservers();
     }
 
     public int getNumPathologies() {
