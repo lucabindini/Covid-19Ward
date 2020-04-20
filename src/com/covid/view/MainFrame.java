@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
                         patientRegisteredResidenceTextField.setText(controller.getPatientRegisteredResidence(patientsList.getSelectedIndex()));
                         patientAgeTextField.setText(Integer.toString(controller.getPatientAge(patientsList.getSelectedIndex())));
                         patientNumPathologiesTextField.setText(controller.getPatientNumPathologies(patientsList.getSelectedIndex()));
-                        recoveryRateTextField.setText(Double.toString(controller.getRecoveryRate(patientsList.getSelectedIndex())));
+                        recoveryRateTextField.setText(String.format("%.2f", controller.getRecoveryRate(patientsList.getSelectedIndex())));
                         positiveCheckBox.setSelected(controller.isPatientPositive(patientsList.getSelectedIndex()));
                     }
                 }

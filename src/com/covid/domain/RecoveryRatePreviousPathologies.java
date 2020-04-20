@@ -1,41 +1,51 @@
 package com.covid.domain;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class RecoveryRatePreviousPathologies implements RecoveryRateStrategy {
     @Override
     public double recoveryRate(CovidPatient patient) {
-        double rate;
-        switch (patient.getNumPathologies()){
-            case 1:
-                rate = 92.00;
-                break;
-            case 2:
-                rate = 87.00;
-                break;
-            default:
-                rate = 81.00;
+        double rate = 100;
+        for (int i = 0; i < patient.getPreviousPathologies().size(); i++) {
+            rate -= weightedByPathology(patient.getPreviousPathologies().get(i));
         }
         rate += weightedByAge(patient);
         return rate;
     }
 
+    private double weightedByPathology(Pathology pathology) {
+        try {
+            Scanner scanner = new Scanner(new File("./data/weightedByPathology.txt"));
+            while (scanner.hasNextLine()) {
+                if (scanner.nextLine().equalsIgnoreCase(pathology.getName())) {
+                    String a = scanner.nextLine();
+                    System.out.println(a);
+                    return Double.parseDouble(a);
+                }
+                scanner.nextLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File non trovato");
+        }
+        return 0;
+    }
+
     private double weightedByAge(CovidPatient patient) {
-        if(patient.getAge() <= 9)
-            return 6.90;
-        else if(patient.getAge() >= 10 && patient.getAge() <= 19)
-            return 4.40;
-        else if(patient.getAge() >= 20 && patient.getAge() <= 29)
-            return 2.50;
-        else if(patient.getAge() >= 30 && patient.getAge() <= 39)
-            return 0.90;
-        else if(patient.getAge() >= 40 && patient.getAge() <= 49)
-            return -2.00;
-        else if(patient.getAge() >= 50 && patient.getAge() <= 59)
-            return -4.30;
-        else if(patient.getAge() >= 60 && patient.getAge() <= 69)
-            return -5.50;
-        else if(patient.getAge() >= 70 && patient.getAge() <= 79)
-            return -6.20;
-        else
-            return -7.20;
+        try {
+            Scanner scanner = new Scanner(new File("./data/weightedByAge.txt"));
+            while (scanner.hasNextLine()) {
+                if (Integer.parseInt(scanner.nextLine()) == patient.getAge()) {
+                    String a = scanner.nextLine();
+                    System.out.println(a);
+                    return Double.parseDouble(a);
+                }
+                scanner.nextLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File non trovato");
+        }
+        return 0;
     }
 }

@@ -91,7 +91,7 @@ public class MainController {
         ward.getPatients().get(patientIndex).setPositive(value);
     }
 
-    public void addPatient(String name, String surname, String registeredResidence, int age) throws Exception {
+    public void addPatient(String name, String surname, String registeredResidence, int age) throws NoBedsException {
         CovidPatient cp = new CovidPatient.CovidPatientBuilder(name, surname).
                 setRegisteredResidence(registeredResidence).setAge(age).setPositive(true).build();
         ward.addPatient(cp);
@@ -99,7 +99,7 @@ public class MainController {
         view.refresh();
     }
 
-    public void addPathology(int patientIndex, String name, String description) {
+    public void addPathology(int patientIndex, String name, String description) throws MaxPreviousPathologiesException{
         Pathology p = new Pathology(name, description);
         ward.getPatients().get(patientIndex).addPreviousPathology(p);
         view.refresh();
@@ -128,5 +128,13 @@ public class MainController {
 
     public int getOccupiedBeds() {
         return ward.getOccupiedBeds();
+    }
+
+    public boolean hasAlreadyPathology(int patientIndex, String pathology) {
+        for(Pathology p : ward.getPatients().get(patientIndex).getPreviousPathologies()){
+            if(p.getName().equalsIgnoreCase(pathology))
+                return true;
+        }
+        return false;
     }
 }

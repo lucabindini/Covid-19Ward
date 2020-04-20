@@ -1,6 +1,7 @@
 package com.covid.view;
 
 import com.covid.controller.MainController;
+import com.covid.domain.NoBedsException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class AddPatientFrame extends JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        for(int i = 0;i<120;i++)
+        for(int i = 0;i<=100;i++)
             comboBox1.addItem(Integer.toString(i));
         inserisciPazienteButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -32,8 +33,8 @@ public class AddPatientFrame extends JFrame {
                 if (!textField1.getText().equals("") && !textField2.getText().equals("") && !textField3.getText().equals("") && !textField3.getText().equals("")) {
                     try {
                         controller.addPatient(textField1.getText(), textField2.getText(), textField3.getText(), comboBox1.getSelectedIndex());
-                    } catch (Exception exception) {
-                        JOptionPane.showMessageDialog(new JFrame(), "Nessun letto disponibile", "Impossibile aggiungere paziente", JOptionPane.ERROR_MESSAGE);
+                    } catch (NoBedsException exception) {
+                        JOptionPane.showMessageDialog(new JFrame(), exception.getMessage(), "Impossibile aggiungere paziente", JOptionPane.ERROR_MESSAGE);
                     }
                     AddPatientFrame.this.dispose();
                 } else {

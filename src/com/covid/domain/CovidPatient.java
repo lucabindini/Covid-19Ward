@@ -82,10 +82,15 @@ public class CovidPatient extends Observable {
         isPositive = positive;
     }
 
-    public void addPreviousPathology(Pathology p) {
-        previousPathologies.add(p);
-        setChanged();
-        notifyObservers();
+    public void addPreviousPathology(Pathology p) throws MaxPreviousPathologiesException {
+        if (previousPathologies.size() < 3){
+            previousPathologies.add(p);
+            setChanged();
+            notifyObservers();
+        }
+        else{
+            throw new MaxPreviousPathologiesException();
+        }
     }
 
     public int getNumPathologies() {

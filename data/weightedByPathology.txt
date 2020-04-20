@@ -1,0 +1,10 @@
+Problemi Cardiovascolari
+10.5
+Diabete
+7.3
+Problemi Respiratori
+6.3
+Ipertensione
+6.0
+Cancro
+5.6

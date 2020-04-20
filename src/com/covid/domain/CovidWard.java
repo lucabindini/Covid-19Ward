@@ -47,13 +47,13 @@ public class CovidWard {
         CovidWard.occupiedBeds = occupiedBeds;
     }
 
-    public void addPatient(CovidPatient patient) throws Exception{
+    public void addPatient(CovidPatient patient) throws NoBedsException{
         if (occupiedBeds < MAXIMUM_NUM_BEDS) {
             patients.add(patient);
             occupiedBeds++;
         }
         else{
-            throw new Exception("Nessun letto disponibile");
+            throw new NoBedsException();
         }
     }
 }
