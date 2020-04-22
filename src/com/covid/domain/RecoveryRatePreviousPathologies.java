@@ -19,11 +19,8 @@ public class RecoveryRatePreviousPathologies implements RecoveryRateStrategy {
         try {
             Scanner scanner = new Scanner(new File("./data/weightedByPathology.txt"));
             while (scanner.hasNextLine()) {
-                if (scanner.nextLine().equalsIgnoreCase(pathology.getName())) {
-                    String a = scanner.nextLine();
-                    System.out.println(a);
-                    return Double.parseDouble(a);
-                }
+                if (scanner.nextLine().equalsIgnoreCase(pathology.getName()))
+                    return Double.parseDouble(scanner.nextLine());
                 scanner.nextLine();
             }
         } catch (FileNotFoundException e) {
@@ -36,11 +33,8 @@ public class RecoveryRatePreviousPathologies implements RecoveryRateStrategy {
         try {
             Scanner scanner = new Scanner(new File("./data/weightedByAge.txt"));
             while (scanner.hasNextLine()) {
-                if (Integer.parseInt(scanner.nextLine()) == patient.getAge()) {
-                    String a = scanner.nextLine();
-                    System.out.println(a);
-                    return Double.parseDouble(a);
-                }
+                if (Integer.parseInt(scanner.nextLine()) == patient.getAge())
+                    return Double.parseDouble(scanner.nextLine());
                 scanner.nextLine();
             }
         } catch (FileNotFoundException e) {

@@ -99,7 +99,7 @@ public class MainController {
         view.refresh();
     }
 
-    public void addPathology(int patientIndex, String name, String description) throws MaxPreviousPathologiesException{
+    public void addPathology(int patientIndex, String name, String description) throws MaxPreviousPathologiesException {
         Pathology p = new Pathology(name, description);
         ward.getPatients().get(patientIndex).addPreviousPathology(p);
         view.refresh();
@@ -110,8 +110,7 @@ public class MainController {
         int count = 0;
         while (index < ward.getPatients().size()) {
             if (!ward.getPatients().get(index).isPositive()) {
-                ward.getPatients().remove(index);
-                ward.setOccupiedBeds(ward.getOccupiedBeds() - 1);
+                ward.removePatient(ward.getPatients().get(index));
                 records.remove(index);
                 count++;
             } else {
@@ -131,8 +130,8 @@ public class MainController {
     }
 
     public boolean hasAlreadyPathology(int patientIndex, String pathology) {
-        for(Pathology p : ward.getPatients().get(patientIndex).getPreviousPathologies()){
-            if(p.getName().equalsIgnoreCase(pathology))
+        for (Pathology p : ward.getPatients().get(patientIndex).getPreviousPathologies()) {
+            if (p.getName().equalsIgnoreCase(pathology))
                 return true;
         }
         return false;

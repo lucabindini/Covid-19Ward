@@ -2,7 +2,7 @@ package com.covid.domain;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ThreadLocalRandom;
+
 
 public class MedicalRecord implements Observer {
     private final CovidPatient patient;
@@ -11,21 +11,20 @@ public class MedicalRecord implements Observer {
 
     public MedicalRecord(CovidPatient patient) {
         this.patient = patient;
-        medicalRecordID = generateCode(patient);
+        medicalRecordID = generateCode();
         patient.addObserver(this);
         strategy = new RecoveryRateNoPathologies();
     }
 
-    private String generateCode(CovidPatient patient) {
+    private String generateCode() {
         String code = "";
-        if(patient.getName().length()>2)
+        if (patient.getName().length() > 2)
             code += (patient.getName().substring(0, 3)).toUpperCase();
-        if(patient.getSurname().length()>2)
+        if (patient.getSurname().length() > 2)
             code += (patient.getSurname().substring(0, 3)).toUpperCase();
         code += Integer.toString(patient.getAge());
-        if(patient.getRegisteredResidence().length()>2)
+        if (patient.getRegisteredResidence().length() > 2)
             code += (patient.getRegisteredResidence().substring(0, 3)).toUpperCase();
-        code+= ThreadLocalRandom.current().nextInt(100, 999 + 1);
         return code;
     }
 
@@ -37,15 +36,19 @@ public class MedicalRecord implements Observer {
             setStrategy(new RecoveryRateNoPathologies());
     }
 
-    private void setStrategy(RecoveryRateStrategy strategy){
+    private void setStrategy(RecoveryRateStrategy strategy) {
         this.strategy = strategy;
     }
 
-    public double getRecoveryRate(){
+    public double getRecoveryRate() {
         return strategy.recoveryRate(patient);
     }
 
     public String getMedicalRecordID() {
         return medicalRecordID;
+    }
+
+    public RecoveryRateStrategy getStrategy() {
+        return strategy;
     }
 }
