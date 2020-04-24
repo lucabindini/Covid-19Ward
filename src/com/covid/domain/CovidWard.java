@@ -10,14 +10,14 @@ public class CovidWard {
     private static int occupiedBeds = 0;
     public static final int MAXIMUM_NUM_BEDS = 10;
 
-    private CovidWard() {
+    private CovidWard(Doctor director) {
+        CovidWard.director = director;
+        patients = new ArrayList<>();
     }
 
     public static CovidWard getInstance(Doctor director) {
         if (instance == null) {
-            instance = new CovidWard();
-            instance.setDirector(director);
-            instance.setPatients(new ArrayList<>());
+            instance = new CovidWard(director);
         }
         return instance;
     }
@@ -32,15 +32,6 @@ public class CovidWard {
 
     public int getOccupiedBeds() {
         return occupiedBeds;
-    }
-
-
-    private void setDirector(Doctor director) {
-        CovidWard.director = director;
-    }
-
-    private void setPatients(List<CovidPatient> patients) {
-        CovidWard.patients = patients;
     }
 
     public void addPatient(CovidPatient patient) throws NoBedsException {
