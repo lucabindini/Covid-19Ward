@@ -9,6 +9,7 @@ public class CovidPatient extends Observable {
     private final String surname;
     private final String registeredResidence;
     private final int age;
+    private int saturation;
     private boolean isPositive;
     private final List<Pathology> previousPathologies;
 
@@ -51,6 +52,7 @@ public class CovidPatient extends Observable {
         registeredResidence = builder.registeredResidence;
         age = builder.age;
         isPositive = builder.isPositive;
+        saturation = 0;
         previousPathologies = new ArrayList<>();
     }
 
@@ -74,8 +76,16 @@ public class CovidPatient extends Observable {
         return previousPathologies;
     }
 
+    public int getSaturation() {
+        return saturation;
+    }
+
     public boolean isPositive() {
         return isPositive;
+    }
+
+    public void setSaturation(int saturation) {
+        this.saturation = saturation;
     }
 
     public void setPositive(boolean positive) {

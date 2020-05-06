@@ -7,13 +7,11 @@ import java.util.ArrayList;
 
 public class MainController {
     private CovidWard ward;
-    private final ArrayList<MedicalRecord> records;
     private final MainFrame view;
 
 
     public MainController(MainFrame view) {
         this.view = view;
-        records = new ArrayList<>();
     }
 
     public Object[] patientsList() {
@@ -60,8 +58,12 @@ public class MainController {
         return ward.getPatients().get(patientIndex).getAge();
     }
 
-    public String getPatientNumPathologies(int patientIndex) {
-        return Integer.toString(ward.getPatients().get(patientIndex).getNumPathologies());
+    public int getPatientNumPathologies(int patientIndex) {
+        return ward.getPatients().get(patientIndex).getNumPathologies();
+    }
+
+    public int getPatientSaturation(int patientIndex) {
+        return ward.getPatients().get(patientIndex).getSaturation();
     }
 
     public boolean isPatientPositive(int patientIndex) {
@@ -73,11 +75,11 @@ public class MainController {
     }
 
     public String getMedicalRecordID(int recordIndex) {
-        return records.get(recordIndex).getMedicalRecordID();
+        return ward.getRecords().get(recordIndex).getMedicalRecordID();
     }
 
     public double getRecoveryRate(int recordIndex) {
-        return records.get(recordIndex).getRecoveryRate();
+        return ward.getRecords().get(recordIndex).getRecoveryRate();
     }
 
     public void setDirector(String name, String surname, String specialization) {
@@ -85,6 +87,10 @@ public class MainController {
         ward = CovidWard.getInstance(director);
         view.refresh();
         view.setVisible(true);
+    }
+
+    public void setPatientSaturation(int patientIndex, int saturation) {
+        ward.getPatients().get(patientIndex).setSaturation(saturation);
     }
 
     public void setPatientPositive(int patientIndex, boolean value) {
@@ -95,7 +101,6 @@ public class MainController {
         CovidPatient cp = new CovidPatient.CovidPatientBuilder(name, surname).
                 setRegisteredResidence(registeredResidence).setAge(age).setPositive(true).build();
         ward.addPatient(cp);
-        records.add(new MedicalRecord(cp));
         view.refresh();
     }
 
@@ -105,13 +110,21 @@ public class MainController {
         view.refresh();
     }
 
+    public void assignPatientVentilator(int patientIndex, String typology) throws NoLungVentilatorsException {
+        if (typology.equalsIgnoreCase("VENTILATORE A PRESSIONE POSITIVA"))
+            ward.assignVentilator(ward.getPatients().get(patientIndex), LungVentilatorsTypologies.POSITIVE_PRESSURE_VENTILATOR);
+
+        else
+            ward.assignVentilator(ward.getPatients().get(patientIndex), LungVentilatorsTypologies.NEGATIVE_PRESSURE_VENTILATOR);
+        view.refresh();
+    }
+
     public int dischargeAllNegatives() {
         int index = 0;
         int count = 0;
         while (index < ward.getPatients().size()) {
             if (!ward.getPatients().get(index).isPositive()) {
                 ward.removePatient(ward.getPatients().get(index));
-                records.remove(index);
                 count++;
             } else {
                 index++;
@@ -135,5 +148,13 @@ public class MainController {
                 return true;
         }
         return false;
+    }
+
+    public LungVentilator hasAlreadyVentilator(int patientIndex) {
+        for (LungVentilator ventilator : ward.getVentilators()) {
+            if (ventilator.getPatient() == ward.getPatients().get(patientIndex))
+                return ventilator;
+        }
+        return null;
     }
 }

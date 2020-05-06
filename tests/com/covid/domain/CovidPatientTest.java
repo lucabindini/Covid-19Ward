@@ -46,6 +46,12 @@ class CovidPatientTest {
     }
 
     @Test
+    void setSaturation() {
+        patient.setSaturation(95);
+        assertEquals(patient.getSaturation(), 95);
+    }
+
+    @Test
     void addPreviousPathology() throws MaxPreviousPathologiesException {
         patient.getPreviousPathologies().clear();
         patient.addPreviousPathology(new Pathology("Problemi Cardiovascolari", ""));
